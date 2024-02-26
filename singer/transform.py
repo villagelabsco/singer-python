@@ -214,12 +214,16 @@ class Transformer:
                 successes.append(success)
                 result[key] = subdata
             else:
+                # Customization: if no schema is specified, insert the raw data
+                # This will happen if the data source changes their data model
+                result[key] = value
+
                 # track that field has been removed because it wasn't
                 # found in the schema. This likely indicates some problem
                 # with discovery but rather than failing the run because
                 # new data was added we'd rather continue the sync and
                 # allow customers to indicate that they want the new data.
-                self.removed.add(".".join(map(str, path + [key])))
+                # self.removed.add(".".join(map(str, path + [key])))
 
         return all(successes), result
 
